@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-select": "^5.8.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
