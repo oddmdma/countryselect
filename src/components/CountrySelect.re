@@ -1,6 +1,6 @@
 let url = "https://gist.githubusercontent.com/rusty-key/659db3f4566df459bd59c8a53dc9f71f/raw/4127f9550ef063121c564025f6d27dceeb279623/counties.json";
 
-let castCountry = (json: Js.Json.t): ReactSelect.selectOption => {
+let castCountry = (json: Js.Json.t): ReactSelect.t => {
   switch (json |> Js.Json.decodeObject) {
   | Some(country) =>
     let label =
@@ -24,38 +24,47 @@ let castCountry = (json: Js.Json.t): ReactSelect.selectOption => {
 let make = () => {
   let (options, setOptions) = React.useState(() => [||]);
 
-  React.useEffect1(
-    () => {
-      Js.Promise.(
-        Fetch.fetch(url)
-        |> then_(Fetch.Response.json)
-        |> then_(json =>
-             Js.Json.decodeArray(json)
-             |> Belt.Option.getExn
-             |> Js.Array.map(~f=item => castCountry(item))
-             |> resolve
-           )
-        |> then_(items => {
-             setOptions(_ => items);
-             resolve();
-           })
-        |> ignore
-      );
+  React.useEffect0(() => {
+    Js.Promise.(
+      Fetch.fetch(url)
+      |> then_(Fetch.Response.json)
+      |> then_(json =>
+           Js.Json.decodeArray(json)
+           |> Belt.Option.getExn
+           |> Js.Array.map(~f=item => castCountry(item))
+           |> resolve
+         )
+      |> then_(items => {
+           setOptions(_ => items);
+           resolve();
+         })
+      |> ignore
+    );
 
-      Some(() => ());
-    },
-    [||],
-  );
+    Some(() => ());
+  });
 
-  let handleChange = (option: ReactSelect.selectOption) => {
+  let optionComponent = (option: ReactSelect.t) => {
+    <CountryItem.make country=option />;
+  };
+
+  let singleValueComponent = (option: ReactSelect.t) => {
+    <CountryItem.make country=option />;
+  };
+
+  let handleChange = (option: ReactSelect.t) => {
     Js.log(
       "Selected country: " ++ option.label ++ " (" ++ option.value ++ ")",
     );
   };
-  <div>
+  <div style=Styles.root>
     <ReactSelect
       options
-      onChange=(handleChange: ReactSelect.selectOption => unit)
+      onChange=(handleChange: ReactSelect.t => unit)
+      components={
+        "Option": optionComponent,
+        "SingleValue": singleValueComponent,
+      }
     />
   </div>;
 };

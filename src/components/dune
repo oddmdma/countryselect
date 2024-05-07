@@ -12,4 +12,5 @@
  (modes melange)
  (libraries reason-react melange-fetch melange.belt)
  (preprocess
-  (pps melange.ppx reason-react-ppx)))
+  (pps melange.ppx reason-react-ppx))
+)

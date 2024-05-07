@@ -1,5 +1,4 @@
-[@mel.deriving abstract]
-type selectOption = {
+type t = {
   label: string,
   value: string,
 };
@@ -8,14 +7,18 @@ type selectOption = {
 external reactSelect:
   React.component({
     .
-    "options": array(selectOption),
-    "onChange": selectOption => unit,
+    "options": array(t),
+    "onChange": t => unit,
+    "components": Js.t({..}),
   }) =
   "default";
 
+[@mel.module "react-select"]
 [@react.component]
-let make = (~options: array(selectOption), ~onChange: selectOption => unit) =>
+let make =
+    (~options: array(t), ~onChange: t => unit, ~components: Js.t({..})) => {
   React.createElement(
     reactSelect,
-    {"options": options, "onChange": onChange},
+    {"options": options, "onChange": onChange, "components": components},
   );
+};
