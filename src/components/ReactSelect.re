@@ -12,7 +12,7 @@ module ReactSelect = {
   type components = {
     .
     "Option": Js.Nullable.t(componentProps => React.element),
-    // "SingleValue": Js.Nullable.t(componentProps => React.element),
+    "SingleValue": Js.Nullable.t(componentProps => React.element),
   };
 
   [@mel.module "react-select"] [@react.component]

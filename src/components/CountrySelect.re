@@ -69,7 +69,7 @@ let make = () => {
       onChange=handleChange
       components={
         "Option": Js.Nullable.return(countryComponent),
-        // "SingleValue": Js.Nullable.return(countryComponent),
+        "SingleValue": Js.Nullable.return(countryComponent),
       }
     />
   </div>;
