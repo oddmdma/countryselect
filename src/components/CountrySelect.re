@@ -1,3 +1,5 @@
+open ReactSelect;
+open CountryItem;
 let url = "https://gist.githubusercontent.com/rusty-key/659db3f4566df459bd59c8a53dc9f71f/raw/4127f9550ef063121c564025f6d27dceeb279623/counties.json";
 
 let castCountry = (json: Js.Json.t): ReactSelect.t => {
@@ -23,6 +25,8 @@ let castCountry = (json: Js.Json.t): ReactSelect.t => {
 [@react.component]
 let make = () => {
   let (options, setOptions) = React.useState(() => [||]);
+  // let (selectedOption, setSelectedOption) =
+  // React.useState(() => Js.Nullable.return(options->Belt.Array.get(0)));
 
   React.useEffect0(() => {
     Js.Promise.(
@@ -44,12 +48,14 @@ let make = () => {
     Some(() => ());
   });
 
-  let optionComponent = (option: ReactSelect.t) => {
-    <CountryItem.make country=option />;
-  };
+  let countryComponent = (props: ReactSelect.componentProps) => {
+    let data = props.data;
+    let selectOption = props.selectOption;
 
-  let singleValueComponent = (option: ReactSelect.t) => {
-    <CountryItem.make country=option />;
+    switch (selectOption) {
+    | Some(func) => <CountryItem.make country=data selectOption=func />
+    | None => <CountryItem.make country=data />
+    };
   };
 
   let handleChange = (option: ReactSelect.t) => {
@@ -60,10 +66,10 @@ let make = () => {
   <div style=Styles.root>
     <ReactSelect
       options
-      onChange=(handleChange: ReactSelect.t => unit)
+      onChange=handleChange
       components={
-        "Option": optionComponent,
-        "SingleValue": singleValueComponent,
+        "Option": Js.Nullable.return(countryComponent),
+        // "SingleValue": Js.Nullable.return(countryComponent),
       }
     />
   </div>;

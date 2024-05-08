@@ -1,24 +1,23 @@
-type t = {
-  label: string,
-  value: string,
-};
+module ReactSelect = {
+  type t = {
+    label: string,
+    value: string,
+  };
 
-[@mel.module "react-select"]
-external reactSelect:
-  React.component({
+  type componentProps = {
+    data: t,
+    selectOption: option(t => unit),
+  };
+
+  type components = {
     .
-    "options": array(t),
-    "onChange": t => unit,
-    "components": Js.t({..}),
-  }) =
-  "default";
+    "Option": Js.Nullable.t(componentProps => React.element),
+    // "SingleValue": Js.Nullable.t(componentProps => React.element),
+  };
 
-[@mel.module "react-select"]
-[@react.component]
-let make =
-    (~options: array(t), ~onChange: t => unit, ~components: Js.t({..})) => {
-  React.createElement(
-    reactSelect,
-    {"options": options, "onChange": onChange, "components": components},
-  );
+  [@mel.module "react-select"] [@react.component]
+  external make:
+    (~options: array(t), ~onChange: t => unit, ~components: components) =>
+    React.element =
+    "default";
 };
